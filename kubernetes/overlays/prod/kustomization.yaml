@@ -1,0 +1,30 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+resources:
+  - ../../base
+
+replicas:
+  - name: enterprise-api
+    count: 4
+  - name: kafka-consumer
+    count: 6
+
+images:
+  - name: enterprise-data-platform-api
+    newName: 000000000000.dkr.ecr.us-east-1.amazonaws.com/enterprise-data-platform-prod-api
+    newTag: prod
+  - name: enterprise-data-platform-kafka-consumer
+    newName: 000000000000.dkr.ecr.us-east-1.amazonaws.com/enterprise-data-platform-prod-kafka-consumer
+    newTag: prod
+  - name: enterprise-data-platform-dbt-runner
+    newName: 000000000000.dkr.ecr.us-east-1.amazonaws.com/enterprise-data-platform-prod-dbt-runner
+    newTag: prod
+  - name: enterprise-data-platform-spark
+    newName: 000000000000.dkr.ecr.us-east-1.amazonaws.com/enterprise-data-platform-prod-spark
+    newTag: prod
+
+patches:
+  - path: patch-configmap.yaml
+  - path: patch-serviceaccount.yaml
+  - path: patch-hpa.yaml

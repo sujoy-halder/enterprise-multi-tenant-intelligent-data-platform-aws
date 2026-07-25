@@ -1,0 +1,32 @@
+serviceAccount:
+  create: true
+  name: fluent-bit
+
+config:
+  inputs: |
+    [INPUT]
+        Name tail
+        Path /var/log/containers/*data-platform*.log
+        Parser cri
+        Tag kube.data-platform.*
+        Mem_Buf_Limit 50MB
+        Skip_Long_Lines On
+
+  filters: |
+    [FILTER]
+        Name kubernetes
+        Match kube.*
+        Merge_Log On
+        Keep_Log Off
+        K8S-Logging.Parser On
+        K8S-Logging.Exclude Off
+
+  outputs: |
+    [OUTPUT]
+        Name opensearch
+        Match kube.*
+        Host opensearch.logging.svc.cluster.local
+        Port 9200
+        Index data-platform-${ENVIRONMENT}
+        Suppress_Type_Name On
+        tls On

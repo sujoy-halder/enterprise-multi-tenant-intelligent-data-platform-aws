@@ -1,0 +1,30 @@
+name: enterprise_data_platform
+version: 0.1.0
+config-version: 2
+
+profile: enterprise_data_platform
+
+model-paths: ["models"]
+macro-paths: ["macros"]
+test-paths: ["tests"]
+target-path: "target"
+clean-targets: ["target", "dbt_packages"]
+
+models:
+  enterprise_data_platform:
+    bronze:
+      +materialized: view
+      +schema: bronze
+    silver:
+      +materialized: view
+      +schema: silver
+    gold:
+      +materialized: incremental
+      +schema: gold
+      +on_schema_change: sync_all_columns
+    marts:
+      +materialized: table
+      +schema: marts
+
+vars:
+  platform_domains: ["retail", "healthcare", "finance", "logistics"]

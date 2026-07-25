@@ -1,0 +1,21 @@
+name: enterprise_gold_checkpoint
+config_version: 1.0
+class_name: Checkpoint
+run_name_template: "%Y%m%d-%H%M%S-enterprise-gold"
+validations:
+  - batch_request:
+      datasource_name: snowflake_enterprise
+      data_connector_name: default_runtime_data_connector_name
+      data_asset_name: fact_orders
+      runtime_parameters:
+        query: "select * from GOLD.FACT_ORDERS"
+      batch_identifiers:
+        default_identifier_name: fact_orders
+    expectation_suite_name: gold_core_suite
+action_list:
+  - name: store_validation_result
+    action:
+      class_name: StoreValidationResultAction
+  - name: update_data_docs
+    action:
+      class_name: UpdateDataDocsAction

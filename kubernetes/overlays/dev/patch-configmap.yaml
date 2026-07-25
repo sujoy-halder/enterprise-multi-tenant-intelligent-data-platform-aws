@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: data-platform-config
+  namespace: data-platform
+data:
+  ENVIRONMENT: "dev"
+  AWS_REGION: "us-east-1"
+  DATA_LAKE_BUCKET: "enterprise-data-platform-dev-lake-000000000000"
+  ARTIFACT_BUCKET: "enterprise-data-platform-dev-artifacts-000000000000"
+  KINESIS_STREAM_PREFIX: "enterprise-data-platform-dev"

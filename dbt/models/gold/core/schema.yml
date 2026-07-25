@@ -1,0 +1,55 @@
+version: 2
+
+models:
+  - name: fact_orders
+    description: Business-ready order fact table.
+    columns:
+      - name: order_id
+        tests: [not_null, unique]
+      - name: customer_key
+        tests: [not_null]
+      - name: order_amount
+        tests:
+          - not_null
+          - dbt_utils.expression_is_true:
+              expression: ">= 0"
+  - name: fact_payments
+    description: Business-ready payment fact table.
+    columns:
+      - name: payment_id
+        tests: [not_null, unique]
+      - name: order_id
+        tests:
+          - not_null
+          - relationships:
+              to: ref('fact_orders')
+              field: order_id
+      - name: amount
+        tests:
+          - dbt_utils.expression_is_true:
+              expression: ">= 0"
+  - name: fact_shipments
+    description: Business-ready shipment fact table.
+    columns:
+      - name: shipment_id
+        tests: [not_null, unique]
+      - name: order_id
+        tests:
+          - relationships:
+              to: ref('fact_orders')
+              field: order_id
+  - name: dim_customer
+    description: Customer dimension with hashed direct identifiers.
+    columns:
+      - name: customer_key
+        tests: [not_null, unique]
+  - name: dim_store
+    description: Store dimension.
+    columns:
+      - name: store_key
+        tests: [not_null, unique]
+  - name: dim_product
+    description: Product dimension.
+    columns:
+      - name: product_key
+        tests: [not_null, unique]

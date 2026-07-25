@@ -1,0 +1,46 @@
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: data-platform-default-deny
+  namespace: data-platform
+spec:
+  podSelector: {}
+  policyTypes:
+    - Ingress
+    - Egress
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: data-platform-allow-workloads
+  namespace: data-platform
+spec:
+  podSelector:
+    matchLabels:
+      app.kubernetes.io/part-of: enterprise-data-platform
+  policyTypes:
+    - Ingress
+    - Egress
+  ingress:
+    - from:
+        - namespaceSelector:
+            matchLabels:
+              name: data-platform
+        - namespaceSelector:
+            matchLabels:
+              name: monitoring
+  egress:
+    - to:
+        - ipBlock:
+            cidr: 0.0.0.0/0
+      ports:
+        - protocol: TCP
+          port: 443
+        - protocol: TCP
+          port: 9092
+        - protocol: TCP
+          port: 9098
+        - protocol: UDP
+          port: 53
+        - protocol: TCP
+          port: 53

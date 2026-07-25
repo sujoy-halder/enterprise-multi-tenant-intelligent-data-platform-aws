@@ -1,0 +1,62 @@
+groups:
+  - name: enterprise-data-platform.pipeline
+    rules:
+      - alert: PipelineLatencyHigh
+        expr: data_platform_pipeline_latency_seconds{environment=~"dev|prod"} > 900
+        for: 10m
+        labels:
+          severity: warning
+          team: data-platform
+        annotations:
+          summary: "Pipeline latency is above 15 minutes"
+          description: "Domain {{ $labels.domain }} has latency {{ $value }} seconds."
+
+      - alert: PipelineFailureRateHigh
+        expr: rate(data_platform_failed_jobs_total[15m]) > 0.05
+        for: 15m
+        labels:
+          severity: critical
+          team: data-platform
+        annotations:
+          summary: "Pipeline failures are increasing"
+          description: "Failed job rate is {{ $value }} over the last 15 minutes."
+
+      - alert: KinesisIteratorAgeHigh
+        expr: aws_kinesis_get_records_iterator_age_milliseconds_average > 300000
+        for: 10m
+        labels:
+          severity: warning
+          team: data-platform
+        annotations:
+          summary: "Kinesis consumer lag is high"
+          description: "Iterator age is above five minutes."
+
+      - alert: AirflowDagFailed
+        expr: increase(airflow_dagrun_failed_count[10m]) > 0
+        for: 1m
+        labels:
+          severity: critical
+          team: data-platform
+        annotations:
+          summary: "Airflow DAG failed"
+          description: "At least one Airflow DAG failed in the last 10 minutes."
+
+      - alert: DbtTestFailure
+        expr: increase(dbt_tests_failed_total[30m]) > 0
+        for: 1m
+        labels:
+          severity: critical
+          team: data-platform
+        annotations:
+          summary: "dbt tests failed"
+          description: "dbt quality gates failed in {{ $labels.environment }}."
+
+      - alert: SnowflakeCreditsSpike
+        expr: increase(snowflake_credits_used_total[1h]) > 100
+        for: 15m
+        labels:
+          severity: warning
+          team: data-platform
+        annotations:
+          summary: "Snowflake credit usage spike"
+          description: "Warehouse {{ $labels.warehouse }} used {{ $value }} credits in one hour."

@@ -1,0 +1,13 @@
+enterprise_data_platform:
+  target: dev
+  outputs:
+    dev:
+      type: snowflake
+      account: your-account
+      user: svc_dbt
+      password: "{{ env_var('SNOWFLAKE_PASSWORD') }}"
+      role: TRANSFORMER_ROLE
+      database: ENTERPRISE_ANALYTICS
+      warehouse: TRANSFORMING_WH
+      schema: DBT
+      threads: 4

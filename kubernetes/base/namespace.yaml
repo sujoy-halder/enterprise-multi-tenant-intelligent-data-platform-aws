@@ -1,0 +1,23 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: data-platform
+  labels:
+    name: data-platform
+    platform.openai.com/tier: workloads
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: monitoring
+  labels:
+    name: monitoring
+    platform.openai.com/tier: observability
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: metadata
+  labels:
+    name: metadata
+    platform.openai.com/tier: governance

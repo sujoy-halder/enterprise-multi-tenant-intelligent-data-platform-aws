@@ -1,0 +1,49 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: spark-bronze-to-silver
+  namespace: data-platform
+  labels:
+    app.kubernetes.io/name: spark-bronze-to-silver
+    app.kubernetes.io/part-of: enterprise-data-platform
+spec:
+  schedule: "0 * * * *"
+  concurrencyPolicy: Forbid
+  successfulJobsHistoryLimit: 3
+  failedJobsHistoryLimit: 5
+  jobTemplate:
+    spec:
+      backoffLimit: 2
+      template:
+        spec:
+          restartPolicy: Never
+          serviceAccountName: data-platform-workload
+          nodeSelector:
+            workload: spark
+          containers:
+            - name: spark
+              image: enterprise-data-platform-spark:latest
+              imagePullPolicy: IfNotPresent
+              command: ["/opt/spark/bin/spark-submit"]
+              args:
+                - "--master"
+                - "local[*]"
+                - "/app/spark/jobs/bronze_to_silver.py"
+                - "--domain"
+                - "all"
+              envFrom:
+                - configMapRef:
+                    name: data-platform-config
+              resources:
+                requests:
+                  cpu: "1"
+                  memory: 2Gi
+                limits:
+                  cpu: "4"
+                  memory: 8Gi
+              securityContext:
+                allowPrivilegeEscalation: false
+                runAsNonRoot: true
+                runAsUser: 10001
+                capabilities:
+                  drop: ["ALL"]

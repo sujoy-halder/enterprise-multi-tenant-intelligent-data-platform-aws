@@ -1,0 +1,52 @@
+domains:
+  retail:
+    owner: retail-data@company.example
+    event_types:
+      - orders.created
+      - orders.updated
+      - customer.updated
+      - store.inventory_adjusted
+    pii_fields:
+      - customer_email
+      - customer_phone
+    freshness_minutes: 15
+  healthcare:
+    owner: healthcare-data@company.example
+    event_types:
+      - patient.monitoring
+      - appointment.updated
+      - care_team.alerted
+    pii_fields:
+      - patient_id
+      - patient_name
+      - device_id
+    freshness_minutes: 5
+  finance:
+    owner: finance-data@company.example
+    event_types:
+      - payments.authorized
+      - payments.settled
+      - fraud.signal
+      - invoice.generated
+    pii_fields:
+      - customer_id
+      - payment_token
+    freshness_minutes: 10
+  logistics:
+    owner: logistics-data@company.example
+    event_types:
+      - shipment.created
+      - gps.location
+      - warehouse.sensor
+      - supplier.file_received
+    pii_fields:
+      - driver_id
+      - gps_latitude
+      - gps_longitude
+    freshness_minutes: 10
+
+lake:
+  bronze_prefix: bronze
+  silver_prefix: silver
+  gold_prefix: gold
+  quarantine_prefix: quarantine

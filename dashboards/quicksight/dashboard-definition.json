@@ -1,0 +1,36 @@
+{
+  "dashboardId": "enterprise-data-platform-executive",
+  "name": "Enterprise Data Platform Executive Dashboard",
+  "source": "Snowflake ENTERPRISE_ANALYTICS.MARTS",
+  "sheets": [
+    {
+      "name": "Executive",
+      "visuals": [
+        {
+          "title": "Gross Sales",
+          "dataset": "EXECUTIVE_DASHBOARD",
+          "measure": "GROSS_SALES",
+          "aggregation": "sum"
+        },
+        {
+          "title": "Recognized Revenue",
+          "dataset": "EXECUTIVE_DASHBOARD",
+          "measure": "RECOGNIZED_REVENUE",
+          "aggregation": "sum"
+        },
+        {
+          "title": "Orders",
+          "dataset": "EXECUTIVE_DASHBOARD",
+          "measure": "ORDERS",
+          "aggregation": "sum"
+        },
+        {
+          "title": "Shipments",
+          "dataset": "EXECUTIVE_DASHBOARD",
+          "measure": "SHIPMENTS",
+          "aggregation": "sum"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,64 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: kafka-consumer
+  namespace: data-platform
+  labels:
+    app.kubernetes.io/name: kafka-consumer
+    app.kubernetes.io/part-of: enterprise-data-platform
+spec:
+  replicas: 2
+  revisionHistoryLimit: 5
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: kafka-consumer
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 1
+      maxSurge: 1
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: kafka-consumer
+        app.kubernetes.io/part-of: enterprise-data-platform
+    spec:
+      serviceAccountName: data-platform-workload
+      containers:
+        - name: consumer
+          image: enterprise-data-platform-kafka-consumer:latest
+          imagePullPolicy: IfNotPresent
+          envFrom:
+            - configMapRef:
+                name: data-platform-config
+          env:
+            - name: KAFKA_BOOTSTRAP_SERVERS
+              valueFrom:
+                secretKeyRef:
+                  name: platform-runtime-secrets
+                  key: kafka-bootstrap-servers
+                  optional: true
+          readinessProbe:
+            exec:
+              command: ["python", "-m", "app.healthcheck"]
+            initialDelaySeconds: 15
+            periodSeconds: 15
+          livenessProbe:
+            exec:
+              command: ["python", "-m", "app.healthcheck"]
+            initialDelaySeconds: 30
+            periodSeconds: 30
+          resources:
+            requests:
+              cpu: 500m
+              memory: 512Mi
+            limits:
+              cpu: "2"
+              memory: 1Gi
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            runAsNonRoot: true
+            runAsUser: 10001
+            capabilities:
+              drop: ["ALL"]

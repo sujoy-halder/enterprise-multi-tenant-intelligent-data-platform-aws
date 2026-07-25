@@ -1,0 +1,33 @@
+resources:
+  jobs:
+    enterprise_medallion_pipeline:
+      name: enterprise-medallion-pipeline
+      max_concurrent_runs: 1
+      schedule:
+        quartz_cron_expression: "0 15 * * * ?"
+        timezone_id: UTC
+      tasks:
+        - task_key: bronze_to_silver
+          spark_python_task:
+            python_file: ../spark/jobs/bronze_to_silver.py
+            parameters:
+              - "--domain"
+              - "all"
+          job_cluster_key: spark_cluster
+        - task_key: silver_to_gold
+          depends_on:
+            - task_key: bronze_to_silver
+          spark_python_task:
+            python_file: ../spark/jobs/silver_to_gold.py
+            parameters:
+              - "--domain"
+              - "all"
+          job_cluster_key: spark_cluster
+      job_clusters:
+        - job_cluster_key: spark_cluster
+          new_cluster:
+            spark_version: 15.4.x-scala2.12
+            node_type_id: i3.xlarge
+            autoscale:
+              min_workers: 2
+              max_workers: 8

@@ -1,0 +1,39 @@
+mappings:
+  - name: finance_invoice_ingestion
+    source:
+      type: sftp
+      format: csv
+      schedule: nightly
+    target:
+      type: s3
+      bucket_parameter: DATA_LAKE_BUCKET
+      prefix: bronze/domain=finance/source=invoices
+    validations:
+      - invoice_id_not_null
+      - invoice_amount_non_negative
+      - supplier_id_not_null
+  - name: supplier_master_ingestion
+    source:
+      type: erp_export
+      format: csv
+      schedule: nightly
+    target:
+      type: snowflake
+      database: ENTERPRISE_ANALYTICS
+      schema: SILVER
+      table: SUPPLIERS
+    validations:
+      - supplier_id_unique
+      - country_code_valid
+  - name: healthcare_device_reference
+    source:
+      type: api
+      format: json
+      schedule: hourly
+    target:
+      type: s3
+      bucket_parameter: DATA_LAKE_BUCKET
+      prefix: silver/domain=healthcare/source=device_reference
+    validations:
+      - device_id_unique
+      - patient_identifier_masked

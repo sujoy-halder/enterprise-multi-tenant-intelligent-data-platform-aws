@@ -1,0 +1,92 @@
+flowchart LR
+    subgraph Sources
+        Retail[Retail events APIs CSV DB]
+        Healthcare[Healthcare monitoring APIs DB]
+        Finance[Finance payments fraud invoices]
+        Logistics[Logistics GPS IoT supplier files]
+    end
+
+    subgraph Ingestion
+        API[Ingestion API on EKS]
+        Kafka[Kafka consumers]
+        Kinesis[Amazon Kinesis]
+        CDC[PostgreSQL and MySQL CDC]
+        Batch[Airflow batch ingestion]
+    end
+
+    subgraph Lakehouse
+        Bronze[S3 Bronze raw immutable]
+        Silver[S3 Silver conformed]
+        Gold[S3 Gold curated]
+        Glue[AWS Glue Catalog]
+    end
+
+    subgraph Processing
+        Spark[Spark on EKS and Databricks]
+        Airflow[Apache Airflow]
+        GX[Great Expectations]
+        DBT[dbt]
+    end
+
+    subgraph Warehouse
+        Snowflake[Snowflake]
+        FinanceMart[Finance mart]
+        SalesMart[Sales mart]
+        SupplyChainMart[Supply chain mart]
+        CustomerMart[Customer analytics mart]
+        ExecDashboard[Executive dashboard]
+    end
+
+    subgraph Governance
+        DataHub[DataHub or OpenMetadata]
+        Lineage[Lineage ownership tags PII]
+    end
+
+    subgraph Operations
+        Prometheus[Prometheus]
+        Grafana[Grafana]
+        CloudWatch[CloudWatch]
+        OpenSearch[OpenSearch]
+        Alerts[Slack Email SNS]
+    end
+
+    Retail --> API
+    Healthcare --> API
+    Finance --> Kafka
+    Logistics --> Kinesis
+    Retail --> CDC
+    Finance --> Batch
+
+    API --> Kinesis
+    Kafka --> Bronze
+    Kinesis --> Bronze
+    CDC --> Bronze
+    Batch --> Bronze
+
+    Bronze --> Spark --> Silver --> DBT --> Gold
+    Bronze --> Glue
+    Silver --> Glue
+    Gold --> Glue
+    Gold --> Snowflake
+    Snowflake --> FinanceMart
+    Snowflake --> SalesMart
+    Snowflake --> SupplyChainMart
+    Snowflake --> CustomerMart
+    Snowflake --> ExecDashboard
+
+    Airflow --> Spark
+    Airflow --> DBT
+    GX --> Alerts
+    DBT --> DataHub
+    Snowflake --> DataHub
+    DataHub --> Lineage
+
+    API --> Prometheus
+    Kafka --> Prometheus
+    Spark --> Prometheus
+    Airflow --> Prometheus
+    Prometheus --> Grafana
+    CloudWatch --> Grafana
+    API --> OpenSearch
+    Airflow --> OpenSearch
+    Prometheus --> Alerts

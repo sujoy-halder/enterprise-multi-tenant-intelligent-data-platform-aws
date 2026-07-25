@@ -1,0 +1,16 @@
+project_name        = "enterprise-data-platform"
+environment         = "dev"
+aws_region          = "us-east-1"
+cost_center         = "data-platform"
+alert_email         = "data-platform-alerts@example.com"
+eks_cluster_version = "1.30"
+
+availability_zones = ["us-east-1a", "us-east-1b", "us-east-1c"]
+vpc_cidr           = "10.40.0.0/16"
+private_subnets    = ["10.40.10.0/24", "10.40.11.0/24", "10.40.12.0/24"]
+public_subnets     = ["10.40.100.0/24", "10.40.101.0/24", "10.40.102.0/24"]
+
+domain_names = ["retail", "healthcare", "finance", "logistics"]
+
+# MSK is intentionally optional in dev because managed Kafka has a meaningful hourly cost.
+enable_msk = false

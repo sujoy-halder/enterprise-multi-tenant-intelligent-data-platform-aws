@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: data-platform-config
+  namespace: data-platform
+data:
+  ENVIRONMENT: "prod"
+  AWS_REGION: "us-east-1"
+  DATA_LAKE_BUCKET: "enterprise-data-platform-prod-lake-000000000000"
+  ARTIFACT_BUCKET: "enterprise-data-platform-prod-artifacts-000000000000"
+  KINESIS_STREAM_PREFIX: "enterprise-data-platform-prod"
+  LOG_LEVEL: "WARN"

@@ -1,0 +1,38 @@
+{
+  "index_patterns": ["data-platform-*"],
+  "template": {
+    "settings": {
+      "number_of_shards": 3,
+      "number_of_replicas": 1,
+      "index.lifecycle.name": "data-platform-retention",
+      "index.lifecycle.rollover_alias": "data-platform"
+    },
+    "mappings": {
+      "dynamic": true,
+      "properties": {
+        "@timestamp": {
+          "type": "date"
+        },
+        "environment": {
+          "type": "keyword"
+        },
+        "domain": {
+          "type": "keyword"
+        },
+        "pipeline": {
+          "type": "keyword"
+        },
+        "severity": {
+          "type": "keyword"
+        },
+        "message": {
+          "type": "text"
+        },
+        "trace_id": {
+          "type": "keyword"
+        }
+      }
+    }
+  },
+  "priority": 500
+}

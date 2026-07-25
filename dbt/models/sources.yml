@@ -1,0 +1,23 @@
+version: 2
+
+sources:
+  - name: silver
+    database: "{{ env_var('SNOWFLAKE_DATABASE', 'ENTERPRISE_ANALYTICS') }}"
+    schema: SILVER
+    description: Cleaned medallion silver layer loaded from the S3 lakehouse.
+    tables:
+      - name: orders
+        loaded_at_field: event_ts
+        freshness:
+          warn_after: {count: 2, period: hour}
+          error_after: {count: 6, period: hour}
+      - name: payments
+        loaded_at_field: event_ts
+      - name: shipments
+        loaded_at_field: event_ts
+      - name: customers
+        loaded_at_field: updated_at
+      - name: stores
+      - name: products
+      - name: fraud_events
+      - name: inventory_events

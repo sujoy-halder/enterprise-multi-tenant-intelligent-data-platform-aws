@@ -1,0 +1,35 @@
+domains:
+  retail:
+    data_owner: retail-data@company.example
+    technical_owner: retail-platform@company.example
+    slack_channel: "#data-retail"
+  healthcare:
+    data_owner: healthcare-data@company.example
+    technical_owner: healthcare-platform@company.example
+    slack_channel: "#data-healthcare"
+  finance:
+    data_owner: finance-data@company.example
+    technical_owner: finance-platform@company.example
+    slack_channel: "#data-finance"
+  logistics:
+    data_owner: logistics-data@company.example
+    technical_owner: logistics-platform@company.example
+    slack_channel: "#data-logistics"
+
+data_products:
+  fact_orders:
+    domain: retail
+    tier: gold
+    sla_minutes: 60
+  fact_payments:
+    domain: finance
+    tier: gold
+    sla_minutes: 60
+  fact_shipments:
+    domain: logistics
+    tier: gold
+    sla_minutes: 60
+  dim_customer:
+    domain: retail
+    tier: gold
+    sla_minutes: 1440

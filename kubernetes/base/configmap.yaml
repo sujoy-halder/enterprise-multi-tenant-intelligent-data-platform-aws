@@ -1,0 +1,20 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: data-platform-config
+  namespace: data-platform
+data:
+  ENVIRONMENT: "dev"
+  AWS_REGION: "us-east-1"
+  PROJECT_NAME: "enterprise-data-platform"
+  DATA_LAKE_BUCKET: "enterprise-data-platform-dev-lake-000000000000"
+  ARTIFACT_BUCKET: "enterprise-data-platform-dev-artifacts-000000000000"
+  DOMAINS: "retail,healthcare,finance,logistics"
+  KINESIS_STREAM_PREFIX: "enterprise-data-platform-dev"
+  KAFKA_TOPIC_PREFIX: "enterprise"
+  BRONZE_PREFIX: "bronze"
+  SILVER_PREFIX: "silver"
+  GOLD_PREFIX: "gold"
+  SNOWFLAKE_DATABASE: "ENTERPRISE_ANALYTICS"
+  SNOWFLAKE_SCHEMA: "DBT"
+  LOG_LEVEL: "INFO"

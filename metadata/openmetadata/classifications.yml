@@ -1,0 +1,24 @@
+classifications:
+  - name: PII
+    description: Direct or indirect personal identifiers.
+    tags:
+      - name: email
+      - name: phone
+      - name: address
+      - name: customer_id
+  - name: PHI
+    description: Protected health information.
+    tags:
+      - name: patient_id
+      - name: device_id
+      - name: observation
+  - name: PCI
+    description: Payment card or payment token data.
+    tags:
+      - name: payment_token
+      - name: authorization_code
+  - name: Confidential
+    description: Business confidential data.
+    tags:
+      - name: supplier_contract
+      - name: financial_result

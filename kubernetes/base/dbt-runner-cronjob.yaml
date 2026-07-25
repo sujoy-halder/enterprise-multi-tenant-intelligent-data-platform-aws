@@ -1,0 +1,43 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: dbt-runner
+  namespace: data-platform
+  labels:
+    app.kubernetes.io/name: dbt-runner
+    app.kubernetes.io/part-of: enterprise-data-platform
+spec:
+  schedule: "15 5 * * *"
+  concurrencyPolicy: Forbid
+  successfulJobsHistoryLimit: 3
+  failedJobsHistoryLimit: 5
+  jobTemplate:
+    spec:
+      backoffLimit: 1
+      template:
+        spec:
+          restartPolicy: Never
+          serviceAccountName: data-platform-workload
+          containers:
+            - name: dbt
+              image: enterprise-data-platform-dbt-runner:latest
+              imagePullPolicy: IfNotPresent
+              command: ["/bin/sh", "-c"]
+              args:
+                - "dbt deps && dbt build --profiles-dir /app/dbt --target ${ENVIRONMENT}"
+              envFrom:
+                - configMapRef:
+                    name: data-platform-config
+              resources:
+                requests:
+                  cpu: 500m
+                  memory: 1Gi
+                limits:
+                  cpu: "2"
+                  memory: 2Gi
+              securityContext:
+                allowPrivilegeEscalation: false
+                runAsNonRoot: true
+                runAsUser: 10001
+                capabilities:
+                  drop: ["ALL"]
